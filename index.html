@@ -27,7 +27,17 @@
             var headerStruct = {}
             initialHeaders.forEach(header => {
                 let splitHeader = header.split(/\s{2,}|\t/)
-                headerStruct[splitHeader[0]] = splitHeader[1]
+                let value = splitHeader[1]
+                let key = splitHeader[0]
+                if (key.toLowerCase().includes("user-agent")){
+                    value = "i.userAgent"
+                }
+                if (key.toLowerCase().includes("sec-ch-ua")){
+                    if (!key.toLowerCase().includes("sec-ch-ua-")){
+                        value = "i.secchua"
+                    }
+                }
+                headerStruct[key] = value
             });
 
             var pHeaderOrder = "http.PseudoHeaderOrderKey: {"
@@ -42,7 +52,13 @@
             
             var out = "{\n"
             Object.keys(headerStruct).forEach((key) => {
-                out += `"${key.replaceAll('"', '\\"')}": {"${headerStruct[key].replaceAll('"', '\\"')}"},\n`
+                if (!key.toLowerCase().includes("cookie")){
+                    if (headerStruct[key].includes("i.userAgent") || headerStruct[key].includes("i.secchua")){
+                        out += `"${key.replaceAll('"', '\\"')}": {${headerStruct[key]}},\n`
+                    } else {
+                        out += `"${key.replaceAll('"', '\\"')}": {"${headerStruct[key].replaceAll('"', '\\"')}"},\n`
+                    }  
+                }
             })
 
             var headerOrder = "http.HeaderOrderKey: {"
