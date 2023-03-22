@@ -52,7 +52,7 @@
             
             var out = "{\n"
             Object.keys(headerStruct).forEach((key) => {
-                if (!key.toLowerCase().includes("cookie")){
+                if (!key.toLowerCase().includes("cookie") && !key.toLowerCase().includes("content-length")){
                     if (headerStruct[key].includes("i.userAgent") || headerStruct[key].includes("i.secchua")){
                         out += `"${key.replaceAll('"', '\\"')}": {${headerStruct[key]}},\n`
                     } else {
